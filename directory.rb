@@ -8,27 +8,47 @@ def input_students
         puts "Now we have #{students.count} students"
         name = gets.chomp
     end
-    students
+   students
 end
 
 def print_header
-  puts "The students of `Villians Academy"
-  puts "-------------"
+    puts "The students of `Villians Academy"
+    puts "-------------"
 end
 
 def print(students)
-     students.each_with_index do |student, index|
-    puts "#{index + 1} #{student[:name]} (#{student[:cohort]} cohort)"
-  end
+    students.each_with_index do |student, index|
+        puts "#{index + 1} #{student[:name]} (#{student[:cohort]} cohort"     
+    end
 end
 
+def filter_by_initial_letter(students)
+    puts "Please type in a letter to filter by first name."
+    filter_letter = gets.chomp
+    while !filter_letter.empty? do
+    selected_students = students.select { |student| student[:name].start_with?(filter_letter)}
+        selected_students.each_with_index do |student, index|
+        puts "#{index + 1} #{student[:name]} (#{student[:cohort]} cohort"     
+        end
+    filter_letter = gets.chomp
+    end
+end
+
+def filter_by_names_under_12_characters(students)
+    selected_students = students.select { |student| student[:name].size <= 12 }
+    print selected_students
+end
+
+
 def print_footer(students)
-   puts "Overall, we have #{students.count} great students"
+    puts "Overall, we have #{students.count} great students"
 end
 
 students = input_students
 print_header
 print(students)
+filter_by_initial_letter(students)
+filter_by_names_under_12_characters(students)
 print_footer(students)
 
 # students = [
