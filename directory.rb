@@ -1,19 +1,45 @@
+# require "csv"
 @students = []
 
 def interactive_menu
   loop do 
     print_menu
-    process(gets.chomp)
+    process(STDIN.gets.chomp)
   end
 end
 
+def print_menu
+  puts "1. Input the students"
+  puts "2. Show the students"
+  puts "3. Save the list to students.csv"
+  puts "4. Load the list from students.csv"
+  puts "9. Exit"
+end
+
+def process(selection)
+  case selection
+    when "1"
+      input_students
+    when "2"
+      show_students
+    when "3"
+      save_students
+    when "4"
+      load_students
+    when "9"
+      exit 
+    else 
+      puts "I don't know what you meant, try again."
+    end
+end
+
 def input_students
-    puts "Please enter the names of the students, their cohort, country of birth and age seperated by a comma and a single space."
+    puts "Please enter the name of the student, their cohort, country of birth and age, seperated by a comma and a single space."
     puts "To finish, just hit return twice."
     @students = []
-    input = gets.chomp.split(", ")
+    input = STDIN.gets.chomp.split(", ")
     if input.empty?
-        puts "There are no students."
+        puts "No students entered."
     end
     while !input.empty? do
         @students << {name: input[0], cohort: input[1], country: input[2], age: input[3]}
@@ -22,8 +48,14 @@ def input_students
         else
         puts "Now we have #{@students.count} students."
         end
-    input = gets.chomp.split(", ")
+    input = STDIN.gets.chomp.split(", ")
     end
+end
+
+def show_students
+  print_header
+  print_student_list
+  print_footer
 end
 
 def print_header
@@ -41,34 +73,6 @@ def print_footer
     puts "Overall, we have #{@students.count} great students."
 end
 
-def print_menu
-  puts "1. Input the students"
-  puts "2. Show the students"
-  puts "3. Save the list to students.csv"
-  puts "9. Exit"
-end
-
-def show_students
-    print_header
-    print_student_list
-    print_footer
-end
-
-def process(selection)
-  case selection
-    when "1"
-      input_students
-    when "2"
-      show_students
-    when "3"
-      save_students
-    when "9"
-      exit 
-    else 
-      puts "I don't know what you meant, try again."
-    end
-end
-
 def save_students
   file = File.open("students.csv", "w")
   @students.each do |student|
@@ -78,15 +82,39 @@ def save_students
   end
   file.close
 end
+
+def load_students(filename = "students.csv")
+  file = File.open("students.csv", "r")
+  file.readlines.each do |line|
+  name, cohort = line.chomp.split(",")
+    @students << {name: name, cohort: cohort.to_sym}
+  end
+  file.close
+end
+
+def try_load_students
+  filename = ARGV.first 
+  return if filename.nil? 
+  if File.exists?(filename) 
+    load_students(filename)
+     puts "Loaded #{@students.count} from #{filename}"
+  else 
+    puts "Sorry, #{filename} doesn't exist."
+    exit 
+  end
+end
+
+try_load_students
+interactive_menu
 # def filter_by_initial_letter(students)
 #     puts "Please type in a letter to filter by first name."
-#     filter_letter = gets.chomp
+#     filter_letter = STDINgets.chomp
 #     while !filter_letter.empty? do
 #     selected_students = students.select { |student| student[:name].start_with?(filter_letter)}
 #         selected_students.each_with_index do |student, index|
 #         puts "#{index + 1} #{student[:name]} (#{student[:cohort]} cohort"     
 #         end
-#     filter_letter = gets.chomp
+#     filter_letter = STDINgets.chomp
 #     end
 # end
 
@@ -97,17 +125,16 @@ end
 
 # def filter_by_cohort(students)
 #     puts "Please enter the student cohort."
-#     filter_cohort = gets.chomp
+#     filter_cohort = STDINgets.chomp
 #     while !filter_cohort.empty? do
 #         selected_students = students.select { |student| student[:cohort] == filter_cohort }
 #         selected_students.each_with_index do |student, index|
 #         puts "#{index + 1} #{student[:name]} (#{student[:cohort]} cohort"     
 #         end
-#     filter_cohort = gets.chomp
+#     filter_cohort = STDINgets.chomp
 #     end
 # end
 
-interactive_menu
 # filter_by_cohort(students)
 # filter_by_initial_letter(students)
 # filter_by_names_under_12_characters(students)
