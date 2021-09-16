@@ -1,9 +1,7 @@
 def interactive_menu
   students = []
   loop do 
-      puts "1. Input the students"
-      puts "2. Show the students"
-      puts "9. Exit"
+      print_menu
       selection = gets.chomp
       case selection
       when "1"
@@ -13,7 +11,7 @@ def interactive_menu
         print(students)
         print_footer(students)
       when "9"
-        exit # this will temiinate the program.
+        exit #this will temiinate the program.
       else 
         puts "I don't know what you meant, try again."
       end
@@ -55,6 +53,11 @@ def print_footer(students)
     puts "Overall, we have #{students.count} great students"
 end
 
+def print_menu
+  puts "1. Input the students"
+  puts "2. Show the students"
+  puts "9. Exit"
+end
 # def filter_by_initial_letter(students)
 #     puts "Please type in a letter to filter by first name."
 #     filter_letter = gets.chomp
