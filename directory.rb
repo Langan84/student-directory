@@ -1,41 +1,29 @@
+@students = []
+
 def interactive_menu
-  students = []
   loop do 
-      print_menu
-      selection = gets.chomp
-      case selection
-      when "1"
-        students = input_students
-      when "2"
-        print_header
-        print(students)
-        print_footer(students)
-      when "9"
-        exit #this will temiinate the program.
-      else 
-        puts "I don't know what you meant, try again."
-      end
-    end
+    print_menu
+    process(gets.chomp)
+  end
 end
 
 def input_students
     puts "Please enter the names of the students, their cohort, country of birth and age seperated by a comma and a single space."
     puts "To finish, just hit return twice."
-    students = []
+    @students = []
     input = gets.chomp.split(", ")
     if input.empty?
         puts "There are no students."
     end
     while !input.empty? do
-        students << {name: input[0], cohort: input[1], country: input[2], age: input[3]}
-        if students.count == 1
-            puts " Now we have #{students.count} student."
+        @students << {name: input[0], cohort: input[1], country: input[2], age: input[3]}
+        if @students.count == 1
+            puts " Now we have #{@students.count} student."
         else
-        puts "Now we have #{students.count} students."
+        puts "Now we have #{@students.count} students."
         end
     input = gets.chomp.split(", ")
     end
-   students
 end
 
 def print_header
@@ -43,14 +31,14 @@ def print_header
     puts "-------------".center(35)
 end
 
-def print(students)
-    students.each_with_index do |student, index|
-        puts "#{index + 1} #{student[:name]}, #{student[:cohort]} cohort, #{student[:country]}, age #{student[:age]}"   
+def print_student_list
+    @students.each_with_index do |student, index|
+        print "#{index + 1} #{student[:name]}, #{student[:cohort]} cohort, #{student[:country]}, age #{student[:age]}.\n"   
     end
 end
 
-def print_footer(students)
-    puts "Overall, we have #{students.count} great students"
+def print_footer
+    puts "Overall, we have #{@students.count} great students."
 end
 
 def print_menu
@@ -58,6 +46,26 @@ def print_menu
   puts "2. Show the students"
   puts "9. Exit"
 end
+
+def show_students
+    print_header
+    print_student_list
+    print_footer
+end
+
+def process(selection)
+  case selection
+    when "1"
+      input_students
+    when "2"
+      show_students
+    when "9"
+      exit 
+    else 
+      puts "I don't know what you meant, try again."
+    end
+end
+
 # def filter_by_initial_letter(students)
 #     puts "Please type in a letter to filter by first name."
 #     filter_letter = gets.chomp
